@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mohid Faraz</title>
+  <meta name="description" content="Mohid Faraz, CS student at Eastern Michigan University. Full-stack work at Zaytune and an AlphaZero-style Connect 4 bot you can play in the browser.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%232b3340%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Segoe UI,Helvetica,Arial,sans-serif%27 font-size=%2717%27 font-weight=%27600%27 fill=%27%23ffffff%27 text-anchor=%27middle%27%3EM%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Mohid Faraz</h1>
+    <p>
+      I'm a CS student at Eastern Michigan University, graduating December 2027. Right now I'm looking
+      for a software engineering internship for summer 2027. Here's what I've been working on.
+    </p>
+    <p class="links">
+      <a href="mailto:mohidfaraz7@gmail.com">mohidfaraz7@gmail.com</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://github.com/mohidf">GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://linkedin.com/in/mohid-faraz">LinkedIn</a>
+      <span aria-hidden="true">·</span>
+      Ypsilanti, Michigan
+    </p>
+  </header>
+
+  <main>
+    <h2>Projects</h2>
+
+    <article class="project">
+      <h3>AlphaZero Connect 4 bot <span class="year">2026</span></h3>
+      <p>
+        A Connect 4 bot that learns by playing against itself, based on the AlphaZero paper. I built it
+        in four steps: the game itself, minimax with alpha-beta pruning, Monte Carlo tree search, and
+        then a neural network trained on its own games with PUCT search on top. Each new network has to
+        beat the previous one in a match before it gets kept.
+      </p>
+
+      <div class="demo">
+        <iframe
+          src="https://mohidf.github.io/alphazero-connect4/?embed"
+          title="Play Connect 4 against the trained network"
+          loading="lazy"
+        ></iframe>
+        <p class="demo-note">
+          This is the actual trained network running in your browser with onnxruntime-web. There's no
+          server. <a href="https://mohidf.github.io/alphazero-connect4/">Open it full size</a> if the
+          board is too small.
+        </p>
+        <p class="demo-fallback">
+          <a class="button" href="https://mohidf.github.io/alphazero-connect4/">Play it in your browser</a>
+        </p>
+      </div>
+
+      <ul class="results">
+        <li>
+          After about 16 hours of training on my laptop's GPU, the network plus search beats my
+          alpha-beta engine at every depth I tried (0.78 score against depth 6 over 30 games with random
+          openings).
+        </li>
+        <li>
+          I measure how good it is by comparing its moves to a perfect Connect 4 solver on 6,000 test
+          positions. The self-play network got stuck at around 26.5% wrong moves.
+        </li>
+        <li>
+          I wasn't sure if that was because the network was too small or because it didn't have enough
+          training data, so I trained the same network on 300k positions labeled by the solver instead.
+          That got it down to 7.4%, so the problem was the data, not the network.
+        </li>
+        <li>
+          Early on my results were inflated because two deterministic bots play the exact same game every
+          time, so a 12 game match was really 2 games. All matches use random openings now.
+        </li>
+        <li>
+          291 pytest tests. The JavaScript version is tested against the Python version on 120 positions
+          to make sure they play the same moves, and the ONNX exports are checked against PyTorch.
+        </li>
+      </ul>
+
+      <p class="meta">
+        Python, PyTorch, NumPy, pytest. Browser version in JavaScript with onnxruntime-web.
+        <a href="https://github.com/mohidf/alphazero-connect4">Code and writeup on GitHub</a>
+      </p>
+    </article>
+
+    <article class="project">
+      <h3>Tic-Tac-Toe with minimax, alpha-beta and MCTS <span class="year">2026</span></h3>
+      <p>
+        I did this before Connect 4 to learn the search algorithms on a game small enough to check by
+        hand. Minimax, then alpha-beta pruning, then basic Monte Carlo tree search. A lot of the bugs I
+        would have hit in Connect 4 I hit here first.
+      </p>
+      <p class="meta">
+        Python, pytest.
+        <a href="https://github.com/mohidf/minimax-mcts-tictactoe">Code</a>
+      </p>
+    </article>
+
+    <h2>Work</h2>
+
+    <article class="job">
+      <h3>Zaytune <span class="year">Core contributor, full-stack · Feb 2026 to present</span></h3>
+      <p>
+        Zaytune is an AI chat app that routes each message to whichever model fits it best. There are two
+        of us working on the routing and reliability code, and I also do most of the frontend.
+      </p>
+      <ul class="results">
+        <li>
+          Co-designed the router: a 9-stage pipeline in Node.js that classifies each message by
+          complexity and intent and sends it to either a fast model or a reasoning model through
+          OpenRouter. It has an offline evaluation harness with unit tests so we can check routing changes
+          before shipping them.
+        </li>
+        <li>
+          Built the retry and reliability layer for the model providers: exponential backoff with jitter,
+          retries before the stream starts, per-provider failure tracking, and a retry button in the
+          client, so users still get a response when a provider returns 429s or 5xx errors.
+        </li>
+        <li>
+          Made an admin dashboard that saves routing traces, so we can look at why a request went to a
+          specific model and replay eval cases against real traffic.
+        </li>
+        <li>
+          Led the React/TypeScript frontend redesign: a design system with four themes, a rewrite of how
+          chat responses render, and mobile-first layouts.
+        </li>
+        <li>
+          Shipped compliance and growth features end to end: server-side geo-restriction for EEA, UK and
+          Switzerland, terms and privacy pages with age gating, and a sitemap and metadata for SEO.
+        </li>
+        <li>
+          Added Jest tests across the routing, reliability and API code.
+        </li>
+      </ul>
+      <p class="meta">
+        Node.js, Express, React, TypeScript, MongoDB, Redis, Docker, Railway, GitHub Actions, Jest, Playwright.
+      </p>
+    </article>
+
+    <h2>Education</h2>
+
+    <dl class="education">
+      <div>
+        <dt>Eastern Michigan University <span class="year">Expected December 2027</span></dt>
+        <dd>
+          B.S. in Computer Science, GPA 3.8. Relevant coursework: data structures and algorithms, database
+          systems, discrete structures, computer organization and architecture.
+        </dd>
+      </div>
+      <div>
+        <dt>Washtenaw Community College <span class="year">2023 to 2025</span></dt>
+        <dd>Associate of Science in Computer Science, GPA 3.8. Transferred to EMU.</dd>
+      </div>
+    </dl>
+
+    <h2>Skills</h2>
+
+    <dl class="skills">
+      <div><dt>Languages</dt><dd>Python, TypeScript, JavaScript, Java, C++, SQL, Bash</dd></div>
+      <div><dt>Frontend</dt><dd>React, Vite, Tailwind CSS, Radix UI, TanStack Query, React Router</dd></div>
+      <div><dt>Backend</dt><dd>Node.js, Express, FastAPI, REST, server-sent events, Passport (JWT, OAuth2), Mongoose, Zod</dd></div>
+      <div><dt>Data and infrastructure</dt><dd>MongoDB, Redis, Meilisearch, Docker, Railway, GitHub Actions</dd></div>
+      <div><dt>Machine learning</dt><dd>PyTorch, reinforcement learning, Monte Carlo tree search, LLM APIs, model routing and evaluation</dd></div>
+      <div><dt>Testing</dt><dd>Jest, Playwright, pytest, offline evaluation harnesses</dd></div>
+      <div><dt>Languages spoken</dt><dd>English, Urdu, Hindi, Punjabi</dd></div>
+    </dl>
+  </main>
+
+  <footer>
+    <p>
+      F-1 student, eligible for CPT and OPT.
+      <a href="https://github.com/mohidf/mohidf.github.io">Source for this page</a>.
+    </p>
+  </footer>
+</body>
+</html>
