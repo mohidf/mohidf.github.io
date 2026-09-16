@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mohid Faraz</title>
-  <meta name="description" content="Mohid Faraz, CS student at Eastern Michigan University. Full-stack work at Zaytune and an AlphaZero-style Connect 4 bot you can play in the browser.">
+  <meta name="description" content="Mohid Faraz, CS student at Eastern Michigan University. Full-stack work at Zaytune, an LLM router that picks the cheapest capable model per prompt, and an AlphaZero-style Connect 4 bot you can play in the browser.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%276%27 fill=%27%232b3340%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-family=%27Segoe UI,Helvetica,Arial,sans-serif%27 font-size=%2717%27 font-weight=%27600%27 fill=%27%23ffffff%27 text-anchor=%27middle%27%3EM%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -82,6 +82,59 @@
       <p class="meta">
         Python, PyTorch, NumPy, pytest. Browser version in JavaScript with onnxruntime-web.
         <a href="https://github.com/mohidf/alphazero-connect4">Code and writeup on GitHub</a>
+      </p>
+    </article>
+
+    <article class="project">
+      <h3>ModelRouter <span class="year">2026</span></h3>
+      <p>
+        A service that reads an LLM prompt, works out what kind of task it is, and sends it to the
+        cheapest model that should be able to handle it. It keeps running averages of how every model
+        does on every kind of task and uses those to make the next decision, so it gets better with use.
+        Built after I kept paying GPT-4o prices for questions a 7B model could answer.
+      </p>
+
+      <div class="demo">
+        <iframe
+          src="https://mohidf.github.io/ModelRouter/?embed"
+          title="Type a prompt and see how ModelRouter classifies and routes it"
+          loading="lazy"
+        ></iframe>
+        <p class="demo-note">
+          This is the server's real classifier and scoring code running in your browser against a
+          snapshot of the performance table. Type anything and it explains the decision.
+          <a href="https://mohidf.github.io/ModelRouter/">Open it full size</a>.
+        </p>
+        <p class="demo-fallback">
+          <a class="button" href="https://mohidf.github.io/ModelRouter/">Try it in your browser</a>
+        </p>
+      </div>
+
+      <ul class="results">
+        <li>
+          Classification is two stages: weighted regexes decide clear prompts in under a millisecond, and
+          ambiguous ones fall through to nearest-neighbour search over 120 embedded example prompts.
+          Confidence is the margin between the top two candidates, not the raw match score.
+        </li>
+        <li>
+          Every model is scored per task type from its own history: confidence, cost, latency and how
+          often it needed escalating, normalised and weighted differently for code, math, chat and so on.
+          10% of requests pick a random model instead so it keeps finding cheaper options.
+        </li>
+        <li>
+          Low-confidence requests are retried one tier up, and both calls are recorded. Learning that
+          those retries were the classifier's fault, not the cheap model's, and lowering that penalty was
+          the change that made cheap models win where they should.
+        </li>
+        <li>
+          Accounts with per-user provider keys, a free tier on Groq for people without keys, per-IP
+          rate limiting, and 158 Jest tests, most of them prompts I once misclassified.
+        </li>
+      </ul>
+
+      <p class="meta">
+        Node.js, Express, TypeScript, React, Supabase (Postgres), OpenAI, Anthropic and Together AI APIs, Jest.
+        <a href="https://github.com/mohidf/ModelRouter">Code and writeup on GitHub</a>
       </p>
     </article>
 
