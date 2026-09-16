@@ -140,13 +140,15 @@
           the change that made cheap models win where they should.
         </li>
         <li>
-          Accounts with per-user provider keys, a free tier on Groq for people without keys, per-IP
-          rate limiting, and 155 Jest tests, most of them prompts I once misclassified.
+          Every model, open-weight or not, is called through OpenRouter with one key. When a call fails
+          outright the request moves to another model at the same tier and the failure counts against
+          the one that broke. Accounts with per-user keys, per-IP rate limiting, and 154 Jest tests,
+          most of them prompts I once misclassified.
         </li>
       </ul>
 
       <p class="meta">
-        Node.js, Express, TypeScript, React, Postgres on Neon with Drizzle, Better Auth, OpenRouter, OpenAI and Anthropic APIs, Jest.
+        Node.js, Express, TypeScript, React, Postgres on Neon with Drizzle, Better Auth, OpenRouter, Jest, Docker.
         <a href="https://github.com/mohidf/ModelBandit">Code and writeup on GitHub</a>
       </p>
     </article>
